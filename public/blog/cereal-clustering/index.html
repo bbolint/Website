@@ -1,361 +1,0 @@
-<!DOCTYPE html>
-<html lang="en-US">
-
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="no-referrer">
-
-<meta name="description" content="Setting up work environment
-rm(list=ls())library(tidyverse)library(ggplot2)library(reshape2)library(factoextra)library(rgl)library(car)library(corrplot)#Loading Datadata &lt;- read_csv(&#39;cereal.csv&#39;)#Scaling data by weightdatasc &lt;- cbind(data[,1:3],data[,4:16]*(1/data$weight))#Normalizing data (norm(0,1))datasc &lt;- cbind(data[,1:3],scale(data[,4:16]))Plotting histograms to explore features
-ggplot(melt(datasc[,4:16]),aes(x=value)) &#43; geom_histogram(bins = 15) &#43; facet_wrap(~variable)## No id variables; using all as measure variablesKeeping calories, protein, fat, carbs and sugars to explore classes,and only keeping type = cereal
-datasc &lt;- datasc[datasc$type==&#39;C&#39;,]datasc &lt;- datasc[,c(1,4,5,6,9,10)]#also for datadata &lt;- data[data$type==&#39;C&#39;,]Exploring principal components, printing Eigenvalues">
-
-<meta property="og:title" content="Cereal Clustering" />
-<meta property="og:description" content="Setting up work environment
-rm(list=ls())library(tidyverse)library(ggplot2)library(reshape2)library(factoextra)library(rgl)library(car)library(corrplot)#Loading Datadata &lt;- read_csv(&#39;cereal.csv&#39;)#Scaling data by weightdatasc &lt;- cbind(data[,1:3],data[,4:16]*(1/data$weight))#Normalizing data (norm(0,1))datasc &lt;- cbind(data[,1:3],scale(data[,4:16]))Plotting histograms to explore features
-ggplot(melt(datasc[,4:16]),aes(x=value)) &#43; geom_histogram(bins = 15) &#43; facet_wrap(~variable)## No id variables; using all as measure variablesKeeping calories, protein, fat, carbs and sugars to explore classes,and only keeping type = cereal
-datasc &lt;- datasc[datasc$type==&#39;C&#39;,]datasc &lt;- datasc[,c(1,4,5,6,9,10)]#also for datadata &lt;- data[data$type==&#39;C&#39;,]Exploring principal components, printing Eigenvalues" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/blog/cereal-clustering/" /><meta property="article:published_time" content="2018-10-13T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2018-10-13T00:00:00&#43;00:00"/>
-
-
-<title>
-
-
-     Cereal Clustering 
-
-</title>
-<link rel="canonical" href="/blog/cereal-clustering/">
-
-
-
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
-
-
-
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
-
-
-
-    
-    <link rel="stylesheet" href="/css/reset.css?t=2018-10-19%2018%3a08%3a00.2425706%20%2b0200%20CEST%20m%3d%2b0.088761201">
-    <link rel="stylesheet" href="/css/pygments.css?t=2018-10-19%2018%3a08%3a00.2425706%20%2b0200%20CEST%20m%3d%2b0.088761201">
-    <link rel="stylesheet" href="/css/main.css?t=2018-10-19%2018%3a08%3a00.2425706%20%2b0200%20CEST%20m%3d%2b0.088761201">
-    
-        <link rel="stylesheet" href="/css/override.css?t=2018-10-19%2018%3a08%3a00.2425706%20%2b0200%20CEST%20m%3d%2b0.088761201">
-    
-
-
-
-
-<link rel="shortcut icon"
-
-    href="/img/leaf.ico"
-
->
-
-
-
-
-
-
-
-
-</head>
-
-
-<body lang="en">
-
-<section class="header">
-    <div class="container">
-        <div class="content">
-            
-                
-                
-                
-                
-                
-                    
-                
-                    
-                
-                    
-                        
-                    
-                
-                    
-                        
-                    
-                
-                    
-                        
-                    
-                
-                    
-                
-                
-                <a href="/"><img class="avatar" src="/img/profile.png" srcset="/img/profile.png 1x,/img/profile-2x.png 2x,/img/profile-3x.png 3x,/img/profile-4x.png 4x"></a>
-            
-            <a href="/"><div class="name"></div></a>
-            
-            <nav>
-                <ul>
-                    
-                        <li class="nav-blog"><a href="/blog/"><span>Projects</span></a></li>
-                    
-                        <li class="nav-education"><a href="/education/"><span>Education</span></a></li>
-                    
-                        <li class="nav-contact"><a href="https://www.linkedin.com/in/balint-bojko/detail/contact-info/"><span>Contact</span></a></li>
-                    
-                        <li class="nav-github"><a href="https://github.com/bbolint/"><span>GitHub</span></a></li>
-                    
-                </ul>
-            </nav>
-        </div>
-    </div>
-</section>
-
-<section class="icons">
-    <div class="container">
-        <div class="content">
-        
-
-        
-
-        
-
-	
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-        </div>
-    </div>
-</section>
-
-
-<section class="main post non-narrow zero-top-spacing">
-    <div class="container">
-        <div class="content">
-            <div class="front-matter">
-                <div class="title-container">
-                    <div class="page-heading">
-
-    Cereal Clustering
-
-</div>
-
-                    <div class="initials"><a href="/">ad</a></div>
-                </div>
-                <div class="meta">
-                    
-                    <div class="date" title='Sat Oct 13 2018 00:00:00 UTC'>Oct 13, 2018</div>
-                    
-                    
-		    <div class="reading-time"><div class="middot"></div>3 minutes read</div>
-                    
-                </div>
-            </div>
-            <div class="markdown">
-                <p>Setting up work environment</p>
-<pre class="r"><code>rm(list=ls())
-library(tidyverse)
-library(ggplot2)
-library(reshape2)
-library(factoextra)
-library(rgl)
-library(car)
-library(corrplot)
-
-#Loading Data
-data &lt;- read_csv(&#39;cereal.csv&#39;)
-#Scaling data by weight
-datasc &lt;- cbind(data[,1:3],data[,4:16]*(1/data$weight))
-#Normalizing data (norm(0,1))
-datasc &lt;- cbind(data[,1:3],scale(data[,4:16]))</code></pre>
-<p>Plotting histograms to explore features</p>
-<pre class="r"><code>ggplot(melt(datasc[,4:16]),aes(x=value)) + geom_histogram(bins = 15) + facet_wrap(~variable)</code></pre>
-<pre><code>## No id variables; using all as measure variables</code></pre>
-<p><img src="/blog/Cereal_Clustering/2018-10-13-cereal-clustering_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<p>Keeping calories, protein, fat, carbs and sugars to explore classes,and only keeping type = cereal</p>
-<pre class="r"><code>datasc &lt;- datasc[datasc$type==&#39;C&#39;,]
-datasc &lt;- datasc[,c(1,4,5,6,9,10)]
-
-#also for data
-data &lt;- data[data$type==&#39;C&#39;,]</code></pre>
-<p>Exploring principal components, printing Eigenvalues</p>
-<pre class="r"><code>pr.out = prcomp(datasc[,2:6] , scale =TRUE)
-fviz_eig(pr.out) #Eigenvalues</code></pre>
-<p><img src="/blog/Cereal_Clustering/2018-10-13-cereal-clustering_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<p>Exploring correlations</p>
-<pre class="r"><code>par(mfrow =c(1,1))
-cormat &lt;- round(cor(datasc[,2:6]),2)
-corrplot(cormat,type = &#39;lower&#39;,order = &#39;FPC&#39;,diag = F)</code></pre>
-<p><img src="/blog/Cereal_Clustering/2018-10-13-cereal-clustering_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Clustering using euclidean distance as dissimilarity measure</p>
-<pre class="r"><code>hc.complete = hclust (dist(datasc[,2:6]), method = &#39;complete&#39;)
-hc.average = hclust (dist(datasc[,2:6]), method =&#39;average&#39;)
-hc.single = hclust (dist(datasc[,2:6]), method =&#39;single&#39;)
-hc.centroid = hclust (dist(datasc[,2:6]), method =&#39;centroid&#39;)</code></pre>
-<p>Plotting dendograms with different linkage types</p>
-<pre class="r"><code>par(mfrow =c(2,2))
-plot(hc.complete ,main =&quot; Complete Linkage &quot;, xlab=&quot;&quot;, sub =&quot;&quot;,
-     cex =.9)
-plot(hc.average , main =&quot; Average Linkage &quot;, xlab=&quot;&quot;, sub =&quot;&quot;,
-     cex =.9)
-plot(hc.single , main=&quot; Single Linkage &quot;, xlab=&quot;&quot;, sub =&quot;&quot;,
-     cex =.9)
-plot(hc.centroid , main=&quot; Single Linkage &quot;, xlab=&quot;&quot;, sub =&quot;&quot;,
-     cex =.9)</code></pre>
-<p><img src="/blog/Cereal_Clustering/2018-10-13-cereal-clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>Choosing complete linkage as definition of dissimilarity between groups, and a cut-off point with 2 groups.</p>
-<pre class="r"><code>cutree(hc.complete, 2)</code></pre>
-<pre><code>##  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 22 23 24 25 26 
-##  1  2  1  1  2  2  1  2  1  1  2  2  2  2  1  1  1  1  1  2  1  1  1  1  1 
-## 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 45 46 47 48 49 50 51 52 
-##  1  2  1  1  1  1  1  1  2  2  1  1  1  2  1  2  1  2  2  2  1  1  2  1  2 
-## 53 54 55 56 57 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 
-##  1  1  1  1  1  1  2  1  1  1  1  1  1  1  2  1  1  2  1  1  1  1  1  1</code></pre>
-<p>Assigning classes to cereals</p>
-<pre class="r"><code>datasc$class &lt;- as.factor(cutree(hc.complete, 2))
-data$class &lt;- as.factor(cutree(hc.complete, 2))</code></pre>
-<p>Save names of cereals for different classes</p>
-<pre class="r"><code>grouped_cereals &lt;- list()
-for (i in 1:length(unique(datasc$class)))
-{
-grouped_cereals[[i]] &lt;- datasc$name[data$class == i]
-}
-grouped_cereals[[2]] #See list</code></pre>
-<pre><code>##  [1] &quot;100% Natural Bran&quot;                     
-##  [2] &quot;Almond Delight&quot;                        
-##  [3] &quot;Apple Cinnamon Cheerios&quot;               
-##  [4] &quot;Basic 4&quot;                               
-##  [5] &quot;Cap&#39;n&#39;Crunch&quot;                          
-##  [6] &quot;Cheerios&quot;                              
-##  [7] &quot;Cinnamon Toast Crunch&quot;                 
-##  [8] &quot;Clusters&quot;                              
-##  [9] &quot;Cracklin&#39; Oat Bran&quot;                    
-## [10] &quot;Fruit &amp; Fibre Dates; Walnuts; and Oats&quot;
-## [11] &quot;Great Grains Pecan&quot;                    
-## [12] &quot;Honey Graham Ohs&quot;                      
-## [13] &quot;Just Right Fruit &amp; Nut&quot;                
-## [14] &quot;Life&quot;                                  
-## [15] &quot;Muesli Raisins; Dates; &amp; Almonds&quot;      
-## [16] &quot;Muesli Raisins; Peaches; &amp; Pecans&quot;     
-## [17] &quot;Mueslix Crispy Blend&quot;                  
-## [18] &quot;Nutri-Grain Almond-Raisin&quot;             
-## [19] &quot;Oatmeal Raisin Crisp&quot;                  
-## [20] &quot;Raisin Nut Bran&quot;                       
-## [21] &quot;Special K&quot;                             
-## [22] &quot;Total Raisin Bran&quot;</code></pre>
-<p>Plotting different classes</p>
-<pre class="r"><code>#Plotting different classes
-scatter3d(x = data$calories, y = data$rating, z = data$protein, 
-          groups = data$class,surface.alpha = 0,residuals = F) </code></pre>
-<pre><code>## Loading required namespace: mgcv</code></pre>
-<pre class="r"><code>rgl.snapshot(filename = &quot;plot2.png&quot;)
-
-#Checking difference between two classes in terms of rating
-t.test(data$rating[data$class==1],data$rating[data$class==2])</code></pre>
-<pre><code>## 
-##  Welch Two Sample t-test
-## 
-## data:  data$rating[data$class == 1] and data$rating[data$class == 2]
-## t = 3.1258, df = 62.364, p-value = 0.002692
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##   3.198547 14.543015
-## sample estimates:
-## mean of x mean of y 
-##  44.73248  35.86170</code></pre>
-
-                <br>
-                
-                  <div class="tags">
-                    <strong>Tags:</strong>
-                  
-                    <a href="/tags/r">R</a>
-                  
-                    <a href="/tags/eda">EDA</a>
-                  
-                    <a href="/tags/clustering">Clustering</a>
-                  
-                  </div>
-                  <br />
-                
-                <p class="back-to-posts"><a href="/blog">Back to posts</a></p>
-            </div>
-            <br>
-            <div class="disqus">
-                <div id="disqus_thread"></div>
-<script type="application/javascript">
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "cocoaexamplesite" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-            </div>
-            
-        </div>
-    </div>
-</section>
-
-
-
-
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
-  
-
-  <script type="text/javascript">
-    hljs.initHighlightingOnLoad();
-  </script>
-
-
-
-
-
-</body>
-</html>
-

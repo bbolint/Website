@@ -17,6 +17,15 @@
       <pubDate>Sat, 13 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>/blog/cereal-clustering/</guid>
+      <description>asdasd</description>
+    </item>
+    
+    <item>
+      <title>Cereal Clustering</title>
+      <link>/blog/cereal-clustering/</link>
+      <pubDate>Sat, 13 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/cereal-clustering/</guid>
       <description>Setting up work environment
 rm(list=ls())library(tidyverse)library(ggplot2)library(reshape2)library(factoextra)library(rgl)library(car)library(corrplot)#Loading Datadata &amp;lt;- read_csv(&amp;#39;cereal.csv&amp;#39;)#Scaling data by weightdatasc &amp;lt;- cbind(data[,1:3],data[,4:16]*(1/data$weight))#Normalizing data (norm(0,1))datasc &amp;lt;- cbind(data[,1:3],scale(data[,4:16]))Plotting histograms to explore features
 ggplot(melt(datasc[,4:16]),aes(x=value)) + geom_histogram(bins = 15) + facet_wrap(~variable)## No id variables; using all as measure variablesKeeping calories, protein, fat, carbs and sugars to explore classes,and only keeping type = cereal

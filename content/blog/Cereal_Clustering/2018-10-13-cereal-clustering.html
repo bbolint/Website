@@ -1,0 +1,126 @@
+---
+title: Cereal Clustering
+author: Balint Bojko
+date: '2018-10-13'
+slug: cereal-clustering
+categories:
+  - R
+tags:
+  - R
+  - EDA
+  - Clustering
+---
+
+
+
+<p>Setting up work environment</p>
+<pre class="r"><code>rm(list=ls())
+library(tidyverse)
+library(ggplot2)
+library(reshape2)
+library(factoextra)
+library(rgl)
+library(car)
+library(corrplot)
+
+#Loading Data
+data &lt;- read_csv(&#39;cereal.csv&#39;)
+#Scaling data by weight
+datasc &lt;- cbind(data[,1:3],data[,4:16]*(1/data$weight))
+#Normalizing data (norm(0,1))
+datasc &lt;- cbind(data[,1:3],scale(data[,4:16]))</code></pre>
+<p>Plotting histograms to explore features</p>
+<pre class="r"><code>ggplot(melt(datasc[,4:16]),aes(x=value)) + geom_histogram(bins = 15) + facet_wrap(~variable)</code></pre>
+<pre><code>## No id variables; using all as measure variables</code></pre>
+<p><img src="/blog/Cereal_Clustering/2018-10-13-cereal-clustering_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Keeping calories, protein, fat, carbs and sugars to explore classes,and only keeping type = cereal</p>
+<pre class="r"><code>datasc &lt;- datasc[datasc$type==&#39;C&#39;,]
+datasc &lt;- datasc[,c(1,4,5,6,9,10)]
+
+#also for data
+data &lt;- data[data$type==&#39;C&#39;,]</code></pre>
+<p>Exploring principal components, printing Eigenvalues</p>
+<pre class="r"><code>pr.out = prcomp(datasc[,2:6] , scale =TRUE)
+fviz_eig(pr.out) #Eigenvalues</code></pre>
+<p><img src="/blog/Cereal_Clustering/2018-10-13-cereal-clustering_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Exploring correlations</p>
+<pre class="r"><code>par(mfrow =c(1,1))
+cormat &lt;- round(cor(datasc[,2:6]),2)
+corrplot(cormat,type = &#39;lower&#39;,order = &#39;FPC&#39;,diag = F)</code></pre>
+<p><img src="/blog/Cereal_Clustering/2018-10-13-cereal-clustering_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Clustering using euclidean distance as dissimilarity measure</p>
+<pre class="r"><code>hc.complete = hclust (dist(datasc[,2:6]), method = &#39;complete&#39;)
+hc.average = hclust (dist(datasc[,2:6]), method =&#39;average&#39;)
+hc.single = hclust (dist(datasc[,2:6]), method =&#39;single&#39;)
+hc.centroid = hclust (dist(datasc[,2:6]), method =&#39;centroid&#39;)</code></pre>
+<p>Plotting dendograms with different linkage types</p>
+<pre class="r"><code>par(mfrow =c(2,2))
+plot(hc.complete ,main =&quot; Complete Linkage &quot;, xlab=&quot;&quot;, sub =&quot;&quot;,
+     cex =.9)
+plot(hc.average , main =&quot; Average Linkage &quot;, xlab=&quot;&quot;, sub =&quot;&quot;,
+     cex =.9)
+plot(hc.single , main=&quot; Single Linkage &quot;, xlab=&quot;&quot;, sub =&quot;&quot;,
+     cex =.9)
+plot(hc.centroid , main=&quot; Single Linkage &quot;, xlab=&quot;&quot;, sub =&quot;&quot;,
+     cex =.9)</code></pre>
+<p><img src="/blog/Cereal_Clustering/2018-10-13-cereal-clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Choosing complete linkage as definition of dissimilarity between groups, and a cut-off point with 2 groups.</p>
+<pre class="r"><code>cutree(hc.complete, 2)</code></pre>
+<pre><code>##  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 22 23 24 25 26 
+##  1  2  1  1  2  2  1  2  1  1  2  2  2  2  1  1  1  1  1  2  1  1  1  1  1 
+## 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 45 46 47 48 49 50 51 52 
+##  1  2  1  1  1  1  1  1  2  2  1  1  1  2  1  2  1  2  2  2  1  1  2  1  2 
+## 53 54 55 56 57 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 
+##  1  1  1  1  1  1  2  1  1  1  1  1  1  1  2  1  1  2  1  1  1  1  1  1</code></pre>
+<p>Assigning classes to cereals</p>
+<pre class="r"><code>datasc$class &lt;- as.factor(cutree(hc.complete, 2))
+data$class &lt;- as.factor(cutree(hc.complete, 2))</code></pre>
+<p>Save names of cereals for different classes</p>
+<pre class="r"><code>grouped_cereals &lt;- list()
+for (i in 1:length(unique(datasc$class)))
+{
+grouped_cereals[[i]] &lt;- datasc$name[data$class == i]
+}
+grouped_cereals[[2]] #See list</code></pre>
+<pre><code>##  [1] &quot;100% Natural Bran&quot;                     
+##  [2] &quot;Almond Delight&quot;                        
+##  [3] &quot;Apple Cinnamon Cheerios&quot;               
+##  [4] &quot;Basic 4&quot;                               
+##  [5] &quot;Cap&#39;n&#39;Crunch&quot;                          
+##  [6] &quot;Cheerios&quot;                              
+##  [7] &quot;Cinnamon Toast Crunch&quot;                 
+##  [8] &quot;Clusters&quot;                              
+##  [9] &quot;Cracklin&#39; Oat Bran&quot;                    
+## [10] &quot;Fruit &amp; Fibre Dates; Walnuts; and Oats&quot;
+## [11] &quot;Great Grains Pecan&quot;                    
+## [12] &quot;Honey Graham Ohs&quot;                      
+## [13] &quot;Just Right Fruit &amp; Nut&quot;                
+## [14] &quot;Life&quot;                                  
+## [15] &quot;Muesli Raisins; Dates; &amp; Almonds&quot;      
+## [16] &quot;Muesli Raisins; Peaches; &amp; Pecans&quot;     
+## [17] &quot;Mueslix Crispy Blend&quot;                  
+## [18] &quot;Nutri-Grain Almond-Raisin&quot;             
+## [19] &quot;Oatmeal Raisin Crisp&quot;                  
+## [20] &quot;Raisin Nut Bran&quot;                       
+## [21] &quot;Special K&quot;                             
+## [22] &quot;Total Raisin Bran&quot;</code></pre>
+<p>Plotting different classes</p>
+<pre class="r"><code>#Plotting different classes
+scatter3d(x = data$calories, y = data$rating, z = data$protein, 
+          groups = data$class,surface.alpha = 0,residuals = F) </code></pre>
+<pre><code>## Loading required namespace: mgcv</code></pre>
+<pre class="r"><code>rgl.snapshot(filename = &quot;plot2.png&quot;)
+
+#Checking difference between two classes in terms of rating
+t.test(data$rating[data$class==1],data$rating[data$class==2])</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  data$rating[data$class == 1] and data$rating[data$class == 2]
+## t = 3.1258, df = 62.364, p-value = 0.002692
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##   3.198547 14.543015
+## sample estimates:
+## mean of x mean of y 
+##  44.73248  35.86170</code></pre>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Balint Bojko</title>
+    <link>/</link>
+    <description>Recent content on Balint Bojko</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Fri, 19 Oct 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>asdasd</title>
+      <link>/blog/asdasd/</link>
+      <pubDate>Fri, 19 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/asdasd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cereal Clustering</title>
+      <link>/blog/cereal-clustering/</link>
+      <pubDate>Sat, 13 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/cereal-clustering/</guid>
+      <description>Setting up work environment
+rm(list=ls())library(tidyverse)library(ggplot2)library(reshape2)library(factoextra)library(rgl)library(car)library(corrplot)#Loading Datadata &amp;lt;- read_csv(&amp;#39;cereal.csv&amp;#39;)#Scaling data by weightdatasc &amp;lt;- cbind(data[,1:3],data[,4:16]*(1/data$weight))#Normalizing data (norm(0,1))datasc &amp;lt;- cbind(data[,1:3],scale(data[,4:16]))Plotting histograms to explore features
+ggplot(melt(datasc[,4:16]),aes(x=value)) + geom_histogram(bins = 15) + facet_wrap(~variable)## No id variables; using all as measure variablesKeeping calories, protein, fat, carbs and sugars to explore classes,and only keeping type = cereal
+datasc &amp;lt;- datasc[datasc$type==&amp;#39;C&amp;#39;,]datasc &amp;lt;- datasc[,c(1,4,5,6,9,10)]#also for datadata &amp;lt;- data[data$type==&amp;#39;C&amp;#39;,]Exploring principal components, printing Eigenvalues</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/education/</link>
+      <pubDate>Mon, 21 Dec 2015 04:05:25 -0600</pubDate>
+      
+      <guid>/education/</guid>
+      <description>University of Amsterdam, Netherlands  MSc. Behavioural Data Science  | September, 2017 – January, 2019 (ongoing)
+Eötvös Lóránd University, Budapest, Hungary  B.A. Psychology  | September, 2014 – June, 2017
+Upper Canada College, Toronto, Canada  International Baccalaureate  | September, 2010 – May, 2012</description>
+    </item>
+    
+    <item>
+      <title>colophon</title>
+      <link>/about/colophon/</link>
+      <pubDate>Sat, 22 Aug 2015 06:28:26 -0700</pubDate>
+      
+      <guid>/about/colophon/</guid>
+      <description>This website is a personal homepage.
+The site is built with Hugo—a static site generator made with Go. The website source code is available on GitHub. It uses the cocoa theme. The posts are written in Markdown.
+The primary font face is Open Sans and the monospace font face is Ubuntu Mono. The social icons are from the Ionicons font set. CSS classes for code syntax highlighting are inserted during compile-time by Hugo using Pygments.</description>
+    </item>
+    
+  </channel>
+</rss>

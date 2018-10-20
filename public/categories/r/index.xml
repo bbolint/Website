@@ -23,5 +23,35 @@ ggplot(melt(datasc[,4:16]),aes(x=value)) + geom_histogram(bins = 15) + facet_wra
 datasc &amp;lt;- datasc[datasc$type==&amp;#39;C&amp;#39;,]datasc &amp;lt;- datasc[,c(1,4,5,6,9,10)]#also for datadata &amp;lt;- data[data$type==&amp;#39;C&amp;#39;,]Exploring principal components, printing Eigenvalues</description>
     </item>
     
+    <item>
+      <title>BDA Competition 3 - Predict the satisfaction of Amazon customers from their reviews</title>
+      <link>/blog/bda-competition-3-predict-the-satisfaction-of-amazon-customers-from-their-reviews/</link>
+      <pubDate>Mon, 08 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/bda-competition-3-predict-the-satisfaction-of-amazon-customers-from-their-reviews/</guid>
+      <description>Description of projectIn this competition your task is to build a classifier that automatically recognize customer satisfaction from textual reviews of baby products that were sold on Amazon.com. Reviews and 5 star ratings were collected by Amazon on their site by inviting customers to enter a review of a product that had bought.
+In stead of relying on pre-trained features (such as the NRC and Afinn word lists), you will rely on automatic methods for feature selection.</description>
+    </item>
+    
+    <item>
+      <title>BDA Competition 2 - Recognizing daily physical activity from phone sensor signals</title>
+      <link>/blog/bda-competition-2-recognizing-daily-physical-activity-from-phone-sensor-signals/</link>
+      <pubDate>Fri, 28 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/bda-competition-2-recognizing-daily-physical-activity-from-phone-sensor-signals/</guid>
+      <description>Description of projectThis competition involves building a classifier that recognizes different types of physical activity from signals measured by the accelerometer and gyroscope in your smartphone, which both measure aspects of movement and orientation. The data for this competition were collected in a lab using a basic smartphone in experiments with human participants carrying out various daily activities in set order.
+The experiments were carried out with a group of 30 volunteers within an age bracket of 19-48 years.</description>
+    </item>
+    
+    <item>
+      <title>BDA Competition 1 - Predicting Personality from vlogger videos</title>
+      <link>/blog/bda-competition-1-predicting-personality-from-vlogger-videos/</link>
+      <pubDate>Tue, 18 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/bda-competition-1-predicting-personality-from-vlogger-videos/</guid>
+      <description>Description of projectThe YouTube personality dataset consists of a collection of behavorial features, speech transcriptions, and personality impression scores for a set of 404 YouTube vloggers that explicitly show themselves in front of the a webcam talking about a variety of topics including personal issues, politics, movies, books, etc. There is no content-related restriction and the language used in the videos is natural and diverse.
+Your team should employ any of the methods discussed in some detail in Chapter 3 of ISLR (James, Witten, Hastie &amp;amp; Tibshirani, 2017), in combination with creative feature engineering and feature selection, to obtain the best numerical predictions for all the personality axes.</description>
+    </item>
+    
   </channel>
 </rss>

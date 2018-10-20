@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Knn on Balint Bojko</title>
+    <link>/tags/knn/</link>
+    <description>Recent content in Knn on Balint Bojko</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Fri, 28 Sep 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/knn/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>BDA Competition 2 - Recognizing daily physical activity from phone sensor signals</title>
+      <link>/blog/bda-competition-2-recognizing-daily-physical-activity-from-phone-sensor-signals/</link>
+      <pubDate>Fri, 28 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/bda-competition-2-recognizing-daily-physical-activity-from-phone-sensor-signals/</guid>
+      <description>Description of projectThis competition involves building a classifier that recognizes different types of physical activity from signals measured by the accelerometer and gyroscope in your smartphone, which both measure aspects of movement and orientation. The data for this competition were collected in a lab using a basic smartphone in experiments with human participants carrying out various daily activities in set order.
+The experiments were carried out with a group of 30 volunteers within an age bracket of 19-48 years.</description>
+    </item>
+    
+  </channel>
+</rss>

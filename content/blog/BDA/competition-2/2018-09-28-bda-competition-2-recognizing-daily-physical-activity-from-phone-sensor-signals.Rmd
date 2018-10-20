@@ -1,0 +1,72 @@
+---
+title: BDA Competition 2 - Recognizing daily physical activity from phone sensor signals
+author: Balint Bojko
+date: '2018-09-28'
+slug: bda-competition-2-recognizing-daily-physical-activity-from-phone-sensor-signals
+categories:
+  - R
+tags:
+  - R
+  - feature engineering
+  - Knn
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = F, error = F, warning = F, eval = F)
+```
+
+
+## Description of project
+This competition involves building a classifier that recognizes different types of physical activity from signals measured by the accelerometer and gyroscope in your smartphone, which both measure aspects of movement and orientation. The data for this competition were collected in a lab using a basic smartphone in experiments with human participants carrying out various daily activities in set order.
+
+The experiments were carried out with a group of 30 volunteers within an age bracket of 19-48 years. They performed a protocol of activities composed of six basic activities: three static postures (standing, sitting, lying) and three dynamic activities (walking, walking downstairs and walking upstairs). The experiment also included postural transitions that occurred between the static postures. These are: stand-to-sit, sit-to-stand, sit-to-lie, lie-to-sit, stand-to-lie, and lie-to-stand. All the participants were wearing a smartphone (Samsung Galaxy S II) on the waist during the experiment execution. We captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz using the embedded accelerometer and gyroscope of the device. The experiments were video-recorded to label the data manually. The obtained dataset was randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data.
+
+A video of the an experimental run can be viewed [here](https://www.youtube.com/embed/XOEN9W05_4A).
+
+
+###The dataset consists of
+Files with Inertial sensor data: Raw triaxial signals from the accelerometer and gyroscope of all the trials with with participants. A file with labels of all the performed activities.
+
+##My role
+I was mainly working on: <br/>
+1. Reducing the number of predictors for the algorithm to reduce the flexibility of our model (we suspected this to be the primary way to improve the model). I used the function rknnBeg that uses 'Recursive Backward Elimination Feature Selection with Random KNN', meaning that it tries different (random) combinations of predictors and then selects the best one based on model accuracy. I nested the function inside of a parallel for loop with this function:
+
+```{r}
+bestfeatures <- foreach(i=1:50) %dopar% #This function retuns a list with the result of each cycle
+{
+  library(rknn)
+  myData_random <- myDataTotal[sample(nrow(myDataTotal)),]   #Randomizing the 6211 rows
+  rknn_beg <- rknnBeg(myData_random[1:2000,7:294], 
+                      y = myData_random$activity[1:2000], #Selecting first 2000
+                      k = 10, #parameter k
+                      stopat = 50) #Minimum number of predictors (variables)
+  best_features <- bestset(x = rknn_beg,criterion = 'mean_accuracy')
+  best_features
+}
+```
+
+
+2. Adding some new predictors that captured the frequencies of different intensities of signal (divided the signal in chunks based on intensity and then created frequency tables for each epoch). Think about it as a measurement of a histogram's height at each chunk, and using those as predictors.
+
+```{r}
+#this code was nested within a function and it was not possible to simplify these assignments:
+breaks <- seq(-1,2,0.1)
+h_1 <- table(cut(c(X1,X2,X3), breaks, right=FALSE))[1]
+h_2 <- table(cut(c(X1,X2,X3), breaks, right=FALSE))[2]
+h_3 <- table(cut(c(X1,X2,X3), breaks, right=FALSE))[3]
+h_4 <- table(cut(c(X1,X2,X3), breaks, right=FALSE))[4]
+h_5 <- table(cut(c(X1,X2,X3), breaks, right=FALSE))[5]
+#Etc.
+```
+
+
+In the end, the final result was not what we expected, for some reason our test predictions were way below our prediction accuracy on the training data, although we used k-fold cross-validation to test the accuracy of our model (which resulted in around 70-80% accuracy, while our test accuracy was below 65%). There might have been some problems at the prediction or submission part, but we never had the time to actually figure that out.
+
+
+
+
+
+
+
+
+

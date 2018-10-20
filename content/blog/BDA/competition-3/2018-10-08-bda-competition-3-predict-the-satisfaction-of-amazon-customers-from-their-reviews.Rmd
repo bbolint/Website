@@ -1,0 +1,65 @@
+---
+title: BDA Competition 3 - Predict the satisfaction of Amazon customers from their
+  reviews
+author: Balint Bojko
+date: '2018-10-08'
+slug: bda-competition-3-predict-the-satisfaction-of-amazon-customers-from-their-reviews
+categories:
+  - R
+tags:
+  - R
+  - feature selection
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = F, error = F, warning = F, eval = F)
+```
+
+## Description of project
+In this competition your task is to build a classifier that automatically recognize customer satisfaction from textual reviews of baby products that were sold on Amazon.com. Reviews and 5 star ratings were collected by Amazon on their site by inviting customers to enter a review of a product that had bought.
+
+In stead of relying on pre-trained features (such as the NRC and Afinn word lists), you will rely on automatic methods for feature selection.
+
+## My role
+*Note*:We had to predict whether a customer gave a rating of >3, or not. This was therefore a classification problem. Customers with ratings of 4 and 5 were marked as 'satisfied', else, 'not satisfied'.
+
+In this competition we have had a large number of predictors (tokens) created with the tidytext R package. Our role was to reduce the number of predictors to the most important ones (decrease model flexibility). I used the lasso binary classification method with the function 'cv.glmnet' from the 'glmnet' R package to fint the optimal value for lambda (the 'cost' parameter for model complexity). This method gave us an initial accuracy of 91.3% on the train data. Our final score was 95% which we achieved with some added features such as ngrams(with n = 2,3).
+
+### Code for fitting 
+```{r}
+#Modeling using glmnet
+y = used_amazon$class
+fit_lasso_lm = glmnet(dtm[trainidx, ], y[trainidx], family = 'binomial') #Response type
+
+#Getting optimal lambda
+cv.out <- cv.glmnet(dtm[trainidx,],y[trainidx], alpha=1)
+bestlam <- cv.out$lambda.min # the value that has the smallest cross-validation error
+
+#Drawing up lambda chosen
+abline(v=log(bestlam), lwd = 3, col = 'red')
+
+#Predicted probabilities for train data
+pred = predict(fit_lasso_lm, s=bestlam, newx=dtm[trainidx, ], type="response")
+```
+
+### Old vs. new predictors
+```{r}
+#Getting tokens
+# ngrams = 1
+reviews <- amazon %>% 
+  mutate(id = row_number()) %>%
+  unnest_tokens(token, review) %>%
+  count(id, name, rating, token) %>%
+  rename(unique_token_count=n)
+
+# ngrams = 3 or we can use 2 # take a long time as n increases!
+reviews_ngrams <- amazon %>% 
+  mutate(id = row_number()) %>%
+  unnest_tokens(output = token, input = review, token = "ngrams", n = 3, n_min = 1) %>% # n-grams
+  count(id, name, rating, token)
+```
+
+
+In the end we placed 4th, but all of the predictions (except one) scored between 95% and 95.5%. We considered this to be a success, however, other teams were equally good at making these predictions.
+
+

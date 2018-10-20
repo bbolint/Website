@@ -1,0 +1,153 @@
+---
+title: BDA Competition 1 - Predicting Personality from vlogger videos
+author: Balint Bojko
+date: '2018-09-18'
+slug: bda-competition-1-predicting-personality-from-vlogger-videos
+categories:
+  - R
+tags:
+  - R
+  - feature engineering
+---
+
+
+
+<div id="description-of-project" class="section level2">
+<h2>Description of project</h2>
+<p>The YouTube personality dataset consists of a collection of behavorial features, speech transcriptions, and personality impression scores for a set of 404 YouTube vloggers that explicitly show themselves in front of the a webcam talking about a variety of topics including personal issues, politics, movies, books, etc. There is no content-related restriction and the language used in the videos is natural and diverse.</p>
+<p>Your team should employ any of the methods discussed in some detail in Chapter 3 of ISLR (James, Witten, Hastie &amp; Tibshirani, 2017), in combination with creative feature engineering and feature selection, to obtain the best numerical predictions for all the personality axes.</p>
+<p>For 80 of the 404 vloggers the personality impression scores are missing. Your method should be used to predict these missing personality scores.</p>
+<p>No other methods than the ones mentioned in ISLR chapters 1 through 3 may be used. Doing so disqualifies your team.</p>
+</div>
+<div id="my-role" class="section level2">
+<h2>My role</h2>
+<p>My role in this project consisted mainly of feature engineering, mainly: 1. Creating a function that allows us to use the ‘dictionary method’ for text analysis (with inputs as .txt files with words to be counted, separated by commas and the text to be analysed); 2. Identifying influential words that are highly correlated with each personality dimensions, and including these in the final model.</p>
+</div>
+<div id="code" class="section level2">
+<h2>1. Code</h2>
+<pre class="r"><code>wordcount &lt;- function(vector_string,path_txt_file, sep)
+{
+  library(stringr)
+  wordlist &lt;- as.vector(read.csv(path_txt_file,sep=sep, encoding = &#39;UTF-8&#39;))
+  
+  freq_table &lt;- matrix(NA,length(vector_string),length(as.vector(colnames(read.csv(path_txt_file,sep=sep)))))
+
+  for (j in 1:length(vector_string))
+  {
+    for (i in 1:ncol(freq_table))
+    {
+      freq_table[j,i] &lt;- str_count(vector_string[j],wordlist[i])
+    }
+  }
+  return(freq_table)
+}
+
+
+#Use case
+vector_string &lt;- Transcripts[,2]
+wordlist &lt;- read.csv(&#39;Libraries/word_library_big.txt&#39;)
+sep &lt;- &#39;,&#39;
+
+wordcount(vector_string,wordlist,sep = sep)</code></pre>
+</div>
+<div id="code-1" class="section level2">
+<h2>2. Code</h2>
+<pre class="r"><code>rm(list=ls())
+library(stringr)
+library(ngram)
+
+#Loading Transcript Dataframe:
+Transcripts &lt;- read.csv(file = &#39;DATA/Transcripts.csv&#39;)
+Transcripts[,1] &lt;- substr(Transcripts[,1],1,nchar(as.vector(Transcripts[,1]))-4)
+Transcripts[,2] &lt;- as.character(Transcripts[,2])
+
+#Loading traits:
+Personality &lt;- read.csv(&#39;DATA/Big5 scores.csv&#39;,sep = &#39;;&#39;)
+colnames(Personality)[1] &lt;- &#39;ID&#39;
+
+#Loading word list
+wordlist &lt;- read.csv(&#39;Libraries/word_library_big.txt&#39;,header = T,sep = &#39;,&#39;)
+
+freq_table &lt;- as.data.frame(matrix(NA,nrow(Transcripts),length(wordlist)+2))
+freq_table[,1] &lt;- Transcripts[,1]
+colnames(freq_table)[1:2] &lt;- c(&#39;ID&#39;,&#39;Wordcount&#39;)
+colnames(freq_table)[3:472] &lt;- colnames(wordlist)
+wordlist_vector &lt;- colnames(wordlist)
+freq_table[,1] &lt;- Transcripts[,1]
+freq_table[,2] &lt;- rep(0)
+  
+#For loop
+for (j in 1:nrow(Transcripts))
+{
+  freq_table[j,2] &lt;- wordcount(Transcripts[j,2])
+
+    for (i in 1:(length(wordlist_vector)+2))
+  {
+    freq_table[j,i+2] &lt;- str_count(Transcripts[j,2],wordlist_vector[i])
+  }
+}
+
+#Creating ratios, adding traits
+ratios &lt;- cbind(Transcripts[,1], (freq_table[,3:474]/freq_table$Wordcount))
+colnames(ratios)[1] &lt;- &#39;ID&#39;
+words_personality &lt;- merge(x = Personality,y = ratios,by = &#39;ID&#39;)
+
+#Checking correlations with Big5
+#Extraversion: Top predictors
+extraversion &lt;- sort(cor(words_personality[,c(2,8:474)])[1,],decreasing = T)[1:30]
+extraversion_n &lt;- sort(cor(words_personality[,c(2,8:474)])[1,],decreasing = F)[1:30]
+
+extraversion_predictors &lt;- names((sort(abs(c(extraversion,extraversion_n)),decreasing = T)[-1])[1:10])
+
+#Agreeableness: Top predictors
+agreeableness &lt;- sort(cor(words_personality[,c(3,8:474)])[1,],decreasing = T)[1:30]
+agreeableness_n &lt;- sort(cor(words_personality[,c(3,8:474)])[1,],decreasing = F)[1:30]
+agreeableness_predictors &lt;- names((sort(abs(c(agreeableness,agreeableness_n)),decreasing = T)[-1])[1:10])
+
+#Conscientiousness: Top predictors
+conscientiousness &lt;- sort(cor(words_personality[,c(4,8:474)])[1,],decreasing = T)[1:30]
+conscientiousness_n &lt;- sort(cor(words_personality[,c(4,8:474)])[1,],decreasing = F)[1:30]
+conscientiousness_predictors &lt;- names((sort(abs(c(conscientiousness,conscientiousness_n)),decreasing = T)[-1])[1:10])
+
+#Emotional Stability: Top predictors
+emotional_stability &lt;- sort(cor(words_personality[,c(5,8:474)])[1,],decreasing = T)[1:30]
+emotional_stability_n &lt;- sort(cor(words_personality[,c(5,8:474)])[1,],decreasing = F)[1:30]
+emotional_predictors &lt;- names((sort(abs(c(emotional_stability,emotional_stability_n)),decreasing = T)[-1])[1:10])
+
+#Openness: Top predictors
+openness &lt;- sort(cor(words_personality[,c(6,8:474)])[1,],decreasing = T)[1:30]
+openness_n &lt;- sort(cor(words_personality[,c(6,8:474)])[1,],decreasing = F)[1:30]
+openness_predictors &lt;- names((sort(abs(c(openness,openness_n)),decreasing = T)[-1])[1:10])
+
+#Creating large table with correlations:
+write.csv(extraversion,file = &#39;DATA/Extraversion_correlates.csv&#39;)
+write.csv(agreeableness,file = &#39;DATA/Agreeableness_correlates.csv&#39;)
+write.csv(conscientiousness,file = &#39;DATA/Conscientiousness_correlates.csv&#39;)
+write.csv(emotional_stability,file = &#39;DATA/Emotional_stability_correlates.csv&#39;)
+write.csv(openness,file = &#39;DATA/Openness_correlates.csv&#39;)
+
+#Creating tables with mot impotant predictors for each trait:
+Extraversion_table &lt;- cbind(ratios[,1],ratios[,extraversion_predictors])
+Openness_table &lt;- cbind(ratios[,1],ratios[,openness_predictors])
+Agreeableness_table &lt;- cbind(ratios[,1],ratios[,agreeableness_predictors])
+Conscientiousness_table &lt;- cbind(ratios[,1],ratios[,conscientiousness_predictors])  
+Emotional_table &lt;- cbind(ratios[,1],ratios[,emotional_predictors])
+
+write.csv(Extraversion_table,&#39;DATA/extraversion_table.csv&#39;)
+write.csv(Openness_table,&#39;DATA/openness_table.csv&#39;)
+write.csv(Agreeableness_table,&#39;DATA/Agreeableness_table.csv&#39;)
+write.csv(Conscientiousness_table,&#39;DATA/conscientiousness_table.csv&#39;)
+write.csv(Emotional_table,&#39;DATA/emotional_table.csv&#39;)
+
+write.csv(emotional_stability, &#39;EMOT_STAB_POS.csv&#39;)
+write.csv(emotional_stability_n, &#39;EMOT_STAB_NEG.csv&#39;)
+write.csv(agreeableness, &#39;AGREEABL_POS.csv&#39;)
+write.csv(agreeableness_n, &#39;AGREEABL_NEG.csv&#39;)
+write.csv(openness, &#39;OPENNESS_POS.csv&#39;)
+write.csv(openness_n, &#39;OPENNESS_NEG.csv&#39;)
+write.csv(extraversion, &#39;EXTRAVERSION_POS.csv&#39;)
+write.csv(extraversion_n, &#39;EXTRAVERSION_NEG.csv&#39;)
+write.csv(conscientiousness, &#39;CONSCIENTIOUSNESS_POS.csv&#39;)
+write.csv(conscientiousness_n, &#39;CONSCIENTIOUSNESS_NEG.csv&#39;)</code></pre>
+<p>These predictors led to a significant increase in model accuracy, and while we won the Public competition, we did not win the Private one since we seemed to be overly optimized on the available Test data.</p>
+</div>

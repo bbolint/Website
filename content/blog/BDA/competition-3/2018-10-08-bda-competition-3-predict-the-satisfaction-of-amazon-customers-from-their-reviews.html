@@ -1,0 +1,58 @@
+---
+title: BDA Competition 3 - Predict the satisfaction of Amazon customers from their
+  reviews
+author: Balint Bojko
+date: '2018-10-08'
+slug: bda-competition-3-predict-the-satisfaction-of-amazon-customers-from-their-reviews
+categories:
+  - R
+tags:
+  - R
+  - feature selection
+---
+
+
+
+<div id="description-of-project" class="section level2">
+<h2>Description of project</h2>
+<p>In this competition your task is to build a classifier that automatically recognize customer satisfaction from textual reviews of baby products that were sold on Amazon.com. Reviews and 5 star ratings were collected by Amazon on their site by inviting customers to enter a review of a product that had bought.</p>
+<p>In stead of relying on pre-trained features (such as the NRC and Afinn word lists), you will rely on automatic methods for feature selection.</p>
+</div>
+<div id="my-role" class="section level2">
+<h2>My role</h2>
+<p><em>Note</em>:We had to predict whether a customer gave a rating of &gt;3, or not. This was therefore a classification problem. Customers with ratings of 4 and 5 were marked as ‘satisfied’, else, ‘not satisfied’.</p>
+<p>In this competition we have had a large number of predictors (tokens) created with the tidytext R package. Our role was to reduce the number of predictors to the most important ones (decrease model flexibility). I used the lasso binary classification method with the function ‘cv.glmnet’ from the ‘glmnet’ R package to fint the optimal value for lambda (the ‘cost’ parameter for model complexity). This method gave us an initial accuracy of 91.3% on the train data. Our final score was 95% which we achieved with some added features such as ngrams(with n = 2,3).</p>
+<div id="code-for-fitting" class="section level3">
+<h3>Code for fitting</h3>
+<pre class="r"><code>#Modeling using glmnet
+y = used_amazon$class
+fit_lasso_lm = glmnet(dtm[trainidx, ], y[trainidx], family = &#39;binomial&#39;) #Response type
+
+#Getting optimal lambda
+cv.out &lt;- cv.glmnet(dtm[trainidx,],y[trainidx], alpha=1)
+bestlam &lt;- cv.out$lambda.min # the value that has the smallest cross-validation error
+
+#Drawing up lambda chosen
+abline(v=log(bestlam), lwd = 3, col = &#39;red&#39;)
+
+#Predicted probabilities for train data
+pred = predict(fit_lasso_lm, s=bestlam, newx=dtm[trainidx, ], type=&quot;response&quot;)</code></pre>
+</div>
+<div id="old-vs.new-predictors" class="section level3">
+<h3>Old vs. new predictors</h3>
+<pre class="r"><code>#Getting tokens
+# ngrams = 1
+reviews &lt;- amazon %&gt;% 
+  mutate(id = row_number()) %&gt;%
+  unnest_tokens(token, review) %&gt;%
+  count(id, name, rating, token) %&gt;%
+  rename(unique_token_count=n)
+
+# ngrams = 3 or we can use 2 # take a long time as n increases!
+reviews_ngrams &lt;- amazon %&gt;% 
+  mutate(id = row_number()) %&gt;%
+  unnest_tokens(output = token, input = review, token = &quot;ngrams&quot;, n = 3, n_min = 1) %&gt;% # n-grams
+  count(id, name, rating, token)</code></pre>
+<p>In the end we placed 4th, but all of the predictions (except one) scored between 95% and 95.5%. We considered this to be a success, however, other teams were equally good at making these predictions.</p>
+</div>
+</div>

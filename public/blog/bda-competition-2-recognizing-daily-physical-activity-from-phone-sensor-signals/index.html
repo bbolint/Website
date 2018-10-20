@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+
+<meta name="description" content="Description of projectThis competition involves building a classifier that recognizes different types of physical activity from signals measured by the accelerometer and gyroscope in your smartphone, which both measure aspects of movement and orientation. The data for this competition were collected in a lab using a basic smartphone in experiments with human participants carrying out various daily activities in set order.
+The experiments were carried out with a group of 30 volunteers within an age bracket of 19-48 years.">
+
+<meta property="og:title" content="BDA Competition 2 - Recognizing daily physical activity from phone sensor signals" />
+<meta property="og:description" content="Description of projectThis competition involves building a classifier that recognizes different types of physical activity from signals measured by the accelerometer and gyroscope in your smartphone, which both measure aspects of movement and orientation. The data for this competition were collected in a lab using a basic smartphone in experiments with human participants carrying out various daily activities in set order.
+The experiments were carried out with a group of 30 volunteers within an age bracket of 19-48 years." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/blog/bda-competition-2-recognizing-daily-physical-activity-from-phone-sensor-signals/" /><meta property="article:published_time" content="2018-09-28T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-09-28T00:00:00&#43;00:00"/>
+
+
+<title>
+
+
+     BDA Competition 2 - Recognizing daily physical activity from phone sensor signals 
+
+</title>
+<link rel="canonical" href="/blog/bda-competition-2-recognizing-daily-physical-activity-from-phone-sensor-signals/">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    
+    <link rel="stylesheet" href="/css/reset.css?t=2018-10-20%2012%3a35%3a46.0069847%20%2b0200%20CEST%20m%3d%2b0.076793801">
+    <link rel="stylesheet" href="/css/pygments.css?t=2018-10-20%2012%3a35%3a46.0069847%20%2b0200%20CEST%20m%3d%2b0.076793801">
+    <link rel="stylesheet" href="/css/main.css?t=2018-10-20%2012%3a35%3a46.0069847%20%2b0200%20CEST%20m%3d%2b0.076793801">
+    
+        <link rel="stylesheet" href="/css/override.css?t=2018-10-20%2012%3a35%3a46.0069847%20%2b0200%20CEST%20m%3d%2b0.076793801">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="/img/leaf.ico"
+
+>
+
+
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                
+                
+                <a href="/"><img class="avatar" src="/img/profile.png" srcset="/img/profile.png 1x,/img/profile-2x.png 2x,/img/profile-3x.png 3x,/img/profile-4x.png 4x"></a>
+            
+            <a href="/"><div class="name"></div></a>
+            
+            <nav>
+                <ul>
+                    
+                        <li class="nav-blog"><a href="/blog/"><span>Projects</span></a></li>
+                    
+                        <li class="nav-education"><a href="/education/"><span>Education</span></a></li>
+                    
+                        <li class="nav-contact"><a href="https://www.linkedin.com/in/balint-bojko/detail/contact-info/"><span>Contact</span></a></li>
+                    
+                        <li class="nav-github"><a href="https://github.com/bbolint/"><span>GitHub</span></a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+        
+
+        
+
+        
+
+	
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    BDA Competition 2 - Recognizing daily physical activity from phone sensor signals
+
+</div>
+
+                    <div class="initials"><a href="/">ad</a></div>
+                </div>
+                <div class="meta">
+                    
+                    <div class="date" title='Fri Sep 28 2018 00:00:00 UTC'>Sep 28, 2018</div>
+                    
+                    
+		    <div class="reading-time"><div class="middot"></div>3 minutes read</div>
+                    
+                </div>
+            </div>
+            <div class="markdown">
+                <div id="description-of-project" class="section level2">
+<h2>Description of project</h2>
+<p>This competition involves building a classifier that recognizes different types of physical activity from signals measured by the accelerometer and gyroscope in your smartphone, which both measure aspects of movement and orientation. The data for this competition were collected in a lab using a basic smartphone in experiments with human participants carrying out various daily activities in set order.</p>
+<p>The experiments were carried out with a group of 30 volunteers within an age bracket of 19-48 years. They performed a protocol of activities composed of six basic activities: three static postures (standing, sitting, lying) and three dynamic activities (walking, walking downstairs and walking upstairs). The experiment also included postural transitions that occurred between the static postures. These are: stand-to-sit, sit-to-stand, sit-to-lie, lie-to-sit, stand-to-lie, and lie-to-stand. All the participants were wearing a smartphone (Samsung Galaxy S II) on the waist during the experiment execution. We captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz using the embedded accelerometer and gyroscope of the device. The experiments were video-recorded to label the data manually. The obtained dataset was randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data.</p>
+<p>A video of the an experimental run can be viewed <a href="https://www.youtube.com/embed/XOEN9W05_4A">here</a>.</p>
+<div id="the-dataset-consists-of" class="section level3">
+<h3>The dataset consists of</h3>
+<p>Files with Inertial sensor data: Raw triaxial signals from the accelerometer and gyroscope of all the trials with with participants. A file with labels of all the performed activities.</p>
+</div>
+</div>
+<div id="my-role" class="section level2">
+<h2>My role</h2>
+<p>I was mainly working on: <br/> 1. Reducing the number of predictors for the algorithm to reduce the flexibility of our model (we suspected this to be the primary way to improve the model). I used the function rknnBeg that uses ‘Recursive Backward Elimination Feature Selection with Random KNN’, meaning that it tries different (random) combinations of predictors and then selects the best one based on model accuracy. I nested the function inside of a parallel for loop with this function:</p>
+<pre class="r"><code>bestfeatures &lt;- foreach(i=1:50) %dopar% #This function retuns a list with the result of each cycle
+{
+  library(rknn)
+  myData_random &lt;- myDataTotal[sample(nrow(myDataTotal)),]   #Randomizing the 6211 rows
+  rknn_beg &lt;- rknnBeg(myData_random[1:2000,7:294], 
+                      y = myData_random$activity[1:2000], #Selecting first 2000
+                      k = 10, #parameter k
+                      stopat = 50) #Minimum number of predictors (variables)
+  best_features &lt;- bestset(x = rknn_beg,criterion = &#39;mean_accuracy&#39;)
+  best_features
+}</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Adding some new predictors that captured the frequencies of different intensities of signal (divided the signal in chunks based on intensity and then created frequency tables for each epoch). Think about it as a measurement of a histogram’s height at each chunk, and using those as predictors.</li>
+</ol>
+<pre class="r"><code>#this code was nested within a function and it was not possible to simplify these assignments:
+breaks &lt;- seq(-1,2,0.1)
+h_1 &lt;- table(cut(c(X1,X2,X3), breaks, right=FALSE))[1]
+h_2 &lt;- table(cut(c(X1,X2,X3), breaks, right=FALSE))[2]
+h_3 &lt;- table(cut(c(X1,X2,X3), breaks, right=FALSE))[3]
+h_4 &lt;- table(cut(c(X1,X2,X3), breaks, right=FALSE))[4]
+h_5 &lt;- table(cut(c(X1,X2,X3), breaks, right=FALSE))[5]
+#Etc.</code></pre>
+<p>In the end, the final result was not what we expected, for some reason our test predictions were way below our prediction accuracy on the training data, although we used k-fold cross-validation to test the accuracy of our model (which resulted in around 70-80% accuracy, while our test accuracy was below 65%). There might have been some problems at the prediction or submission part, but we never had the time to actually figure that out.</p>
+</div>
+
+                <br>
+                
+                  <div class="tags">
+                    <strong>Tags:</strong>
+                  
+                    <a href="/tags/r">R</a>
+                  
+                    <a href="/tags/feature-engineering">feature engineering</a>
+                  
+                    <a href="/tags/knn">Knn</a>
+                  
+                  </div>
+                  <br />
+                
+                <p class="back-to-posts"><a href="/blog">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "cocoaexamplesite" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+
+
+</body>
+</html>
+

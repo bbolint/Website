@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+
+<meta name="description" content="Description of projectIn this competition your task is to build a classifier that automatically recognize customer satisfaction from textual reviews of baby products that were sold on Amazon.com. Reviews and 5 star ratings were collected by Amazon on their site by inviting customers to enter a review of a product that had bought.
+In stead of relying on pre-trained features (such as the NRC and Afinn word lists), you will rely on automatic methods for feature selection.">
+
+<meta property="og:title" content="BDA Competition 3 - Predict the satisfaction of Amazon customers from their reviews" />
+<meta property="og:description" content="Description of projectIn this competition your task is to build a classifier that automatically recognize customer satisfaction from textual reviews of baby products that were sold on Amazon.com. Reviews and 5 star ratings were collected by Amazon on their site by inviting customers to enter a review of a product that had bought.
+In stead of relying on pre-trained features (such as the NRC and Afinn word lists), you will rely on automatic methods for feature selection." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/blog/bda-competition-3-predict-the-satisfaction-of-amazon-customers-from-their-reviews/" /><meta property="article:published_time" content="2018-10-08T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-10-08T00:00:00&#43;00:00"/>
+
+
+<title>
+
+
+     BDA Competition 3 - Predict the satisfaction of Amazon customers from their reviews 
+
+</title>
+<link rel="canonical" href="/blog/bda-competition-3-predict-the-satisfaction-of-amazon-customers-from-their-reviews/">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    
+    <link rel="stylesheet" href="/css/reset.css?t=2018-10-20%2012%3a35%3a46.0059877%20%2b0200%20CEST%20m%3d%2b0.075796701">
+    <link rel="stylesheet" href="/css/pygments.css?t=2018-10-20%2012%3a35%3a46.0059877%20%2b0200%20CEST%20m%3d%2b0.075796701">
+    <link rel="stylesheet" href="/css/main.css?t=2018-10-20%2012%3a35%3a46.0059877%20%2b0200%20CEST%20m%3d%2b0.075796701">
+    
+        <link rel="stylesheet" href="/css/override.css?t=2018-10-20%2012%3a35%3a46.0059877%20%2b0200%20CEST%20m%3d%2b0.075796701">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="/img/leaf.ico"
+
+>
+
+
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                
+                
+                <a href="/"><img class="avatar" src="/img/profile.png" srcset="/img/profile.png 1x,/img/profile-2x.png 2x,/img/profile-3x.png 3x,/img/profile-4x.png 4x"></a>
+            
+            <a href="/"><div class="name"></div></a>
+            
+            <nav>
+                <ul>
+                    
+                        <li class="nav-blog"><a href="/blog/"><span>Projects</span></a></li>
+                    
+                        <li class="nav-education"><a href="/education/"><span>Education</span></a></li>
+                    
+                        <li class="nav-contact"><a href="https://www.linkedin.com/in/balint-bojko/detail/contact-info/"><span>Contact</span></a></li>
+                    
+                        <li class="nav-github"><a href="https://github.com/bbolint/"><span>GitHub</span></a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+        
+
+        
+
+        
+
+	
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    BDA Competition 3 - Predict the satisfaction of Amazon customers from their reviews
+
+</div>
+
+                    <div class="initials"><a href="/">ad</a></div>
+                </div>
+                <div class="meta">
+                    
+                    <div class="date" title='Mon Oct 8 2018 00:00:00 UTC'>Oct 8, 2018</div>
+                    
+                    
+		    <div class="reading-time"><div class="middot"></div>2 minutes read</div>
+                    
+                </div>
+            </div>
+            <div class="markdown">
+                <div id="description-of-project" class="section level2">
+<h2>Description of project</h2>
+<p>In this competition your task is to build a classifier that automatically recognize customer satisfaction from textual reviews of baby products that were sold on Amazon.com. Reviews and 5 star ratings were collected by Amazon on their site by inviting customers to enter a review of a product that had bought.</p>
+<p>In stead of relying on pre-trained features (such as the NRC and Afinn word lists), you will rely on automatic methods for feature selection.</p>
+</div>
+<div id="my-role" class="section level2">
+<h2>My role</h2>
+<p><em>Note</em>:We had to predict whether a customer gave a rating of &gt;3, or not. This was therefore a classification problem. Customers with ratings of 4 and 5 were marked as ‘satisfied’, else, ‘not satisfied’.</p>
+<p>In this competition we have had a large number of predictors (tokens) created with the tidytext R package. Our role was to reduce the number of predictors to the most important ones (decrease model flexibility). I used the lasso binary classification method with the function ‘cv.glmnet’ from the ‘glmnet’ R package to fint the optimal value for lambda (the ‘cost’ parameter for model complexity). This method gave us an initial accuracy of 91.3% on the train data. Our final score was 95% which we achieved with some added features such as ngrams(with n = 2,3).</p>
+<div id="code-for-fitting" class="section level3">
+<h3>Code for fitting</h3>
+<pre class="r"><code>#Modeling using glmnet
+y = used_amazon$class
+fit_lasso_lm = glmnet(dtm[trainidx, ], y[trainidx], family = &#39;binomial&#39;) #Response type
+
+#Getting optimal lambda
+cv.out &lt;- cv.glmnet(dtm[trainidx,],y[trainidx], alpha=1)
+bestlam &lt;- cv.out$lambda.min # the value that has the smallest cross-validation error
+
+#Drawing up lambda chosen
+abline(v=log(bestlam), lwd = 3, col = &#39;red&#39;)
+
+#Predicted probabilities for train data
+pred = predict(fit_lasso_lm, s=bestlam, newx=dtm[trainidx, ], type=&quot;response&quot;)</code></pre>
+</div>
+<div id="old-vs.new-predictors" class="section level3">
+<h3>Old vs. new predictors</h3>
+<pre class="r"><code>#Getting tokens
+# ngrams = 1
+reviews &lt;- amazon %&gt;% 
+  mutate(id = row_number()) %&gt;%
+  unnest_tokens(token, review) %&gt;%
+  count(id, name, rating, token) %&gt;%
+  rename(unique_token_count=n)
+
+# ngrams = 3 or we can use 2 # take a long time as n increases!
+reviews_ngrams &lt;- amazon %&gt;% 
+  mutate(id = row_number()) %&gt;%
+  unnest_tokens(output = token, input = review, token = &quot;ngrams&quot;, n = 3, n_min = 1) %&gt;% # n-grams
+  count(id, name, rating, token)</code></pre>
+<p>In the end we placed 4th, but all of the predictions (except one) scored between 95% and 95.5%. We considered this to be a success, however, other teams were equally good at making these predictions.</p>
+</div>
+</div>
+
+                <br>
+                
+                  <div class="tags">
+                    <strong>Tags:</strong>
+                  
+                    <a href="/tags/r">R</a>
+                  
+                    <a href="/tags/feature-selection">feature selection</a>
+                  
+                  </div>
+                  <br />
+                
+                <p class="back-to-posts"><a href="/blog">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "cocoaexamplesite" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+
+
+</body>
+</html>
+
